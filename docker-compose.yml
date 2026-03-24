@@ -1,0 +1,24 @@
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis_queue
+    ports:
+      - "6379:6379"
+
+  miner:
+    build: ./miner
+    container_name: python_miner
+    env_file:
+      - ./miner/.env
+    depends_on:
+      - redis
+
+  visualizer:
+    build: ./visualizer
+    container_name: streamlit_visualizer
+    env_file:
+      - ./visualizer/.env
+    ports:
+      - "8501:8501" 
+    depends_on:
+      - redis
